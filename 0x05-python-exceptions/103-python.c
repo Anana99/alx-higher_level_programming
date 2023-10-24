@@ -1,6 +1,6 @@
-#include <studio.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include <Python.h>
+#include <python.h>
 #include <floatobject.h>
 
 /**
