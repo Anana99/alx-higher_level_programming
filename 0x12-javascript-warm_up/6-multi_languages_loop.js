@@ -1,4 +1,6 @@
 #!/usr/bin/node
-for (const line of ['C is fun', 'Python is cool', 'Javascript is amazing']) {
-  console.log(line);
+// loop through 3 messages to print to console
+const msgArray = ['C is fun', 'Python is cool', 'Javascript is amazing'];
+for (let i = 0; i < 3; i++) {
+  console.log(msgArray[i]);
 }
