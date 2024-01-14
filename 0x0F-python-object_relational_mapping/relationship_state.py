@@ -1,23 +1,23 @@
 #!/usr/bin/python3
-# Defines a State model.
-# Inherits from SQLAlchemy Base and links to the MySQL table states.
+"""0x0F. Python - Object-relational mapping - task 15. City relationship
+"""
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
-from relationship_city import Base, City
+from sqlalchemy.orm import relationship
+
+Base = declarative_base()
 
 
 class State(Base):
-    """Represents a state for a MySQL database.
+    """Defines ORM class for table `states`, with 2 columns:
 
-    Attributes:
-        __tablename__ (str): The name of the MySQL table to store States.
-        id (sqlalchemy.Integer): The state's id.
-        name (sqlalchemy.String): The state's name.
-        cities (sqlalchemy.orm.relationship): The State-City relationship.
+       `id` (Column): unique identifier, primary key
+       `name` (Column): name of state
+       `cities` (relationship): one-to-many-association to `City`
     """
-    __tablename__ = "states"
-    id = Column(Integer, primary_key=True)
+    __tablename__ = 'states'
+    id = Column(Integer, autoincrement=True, unique=True,
+                nullable=False, primary_key=True)
     name = Column(String(128), nullable=False)
-
-    cities = relationship("City", backref="state", cascade="all, delete")
+    cities = relationship("City", cascade="all, delete-orphan",
+                          backref="state")

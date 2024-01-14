@@ -1,22 +1,27 @@
 #!/usr/bin/python3
-# Creates the State “California” with the City “San Francisco”
-# from the database hbtn_0e_100_usa.
-# Usage: ./100-relationship_states_cities.py <mysql username> /
-#                                            <mysql password> /
-#                                            <database name>
-import sys
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from relationship_state import State
-from relationship_city import Base, City
+"""0x0F. Python - Object-relational mapping - task 15. City relationship
+"""
 
-if __name__ == "__main__":
-    engine = create_engine("mysql+mysqldb://{}:{}@localhost/{}"
-                           .format(sys.argv[1], sys.argv[2], sys.argv[3]),
+if __name__ == '__main__':
+    from sys import argv, exit
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import Session
+    from relationship_state import Base, State
+    from relationship_city import City
+
+    if len(argv) != 4:
+        exit('Use: 100-relationship_states_cities.py <mysql username> '
+             '<mysql password> <database name>')
+
+    engine = create_engine('mysql+mysqldb://{}:{}@localhost:3306/'
+                           '{}'.format(argv[1], argv[2], argv[3]),
                            pool_pre_ping=True)
-    Base.metadata.create_all(engine)
-    Session = sessionmaker(bind=engine)
-    session = Session()
+    session = Session(engine)
+    Base.metadata.create_all(engine)  # creates decprecated warning 1681
 
-    session.add(City(name="San Francisco", state=State(name="California")))
+    new_state = State(name='California')
+    new_city = City(name='San Francisco', state_id=new_state.id)
+    new_state.cities.append(new_city)
+    session.add_all([new_state, new_city])
     session.commit()
+    session.close()
